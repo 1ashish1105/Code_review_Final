@@ -1,8 +1,8 @@
-import express from 'express';
-import { getReview } from '../controllers/ai.controller.js'; // Note: we'll rename the function too
-
+import express from "express";
 const router = express.Router();
 
-router.post('/get-review', getReview);
+router.get("/", (req, res) => {
+    res.json({ message: "AI route working 🚀" });
+});
 
 export default router;
