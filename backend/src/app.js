@@ -8,6 +8,6 @@ app.use(cors()); // Allow frontend to talk to backend
 app.use(express.json()); // Allow backend to read JSON data
 
 
-app.use('/ai', aiRoutes);
+app.use('/api/ai', aiRoutes);
 
 export default app;
