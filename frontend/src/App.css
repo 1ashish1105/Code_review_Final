@@ -165,7 +165,8 @@ main {
   transition: all 0.2s;
 }
 
-.chat-toggle-btn:hover, .chat-toggle-btn.active {
+.chat-toggle-btn:hover,
+.chat-toggle-btn.active {
   background: #58a6ff;
   color: white;
   box-shadow: 0 0 15px rgba(88, 166, 255, 0.3);
@@ -183,8 +184,15 @@ main {
 }
 
 @keyframes slideInRight {
-  from { transform: translateX(30px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .chat-panel {
@@ -275,13 +283,16 @@ main {
   font-size: 13px;
 }
 
-.chat-bubble.ai h1, .chat-bubble.ai h2, .chat-bubble.ai h3 {
+.chat-bubble.ai h1,
+.chat-bubble.ai h2,
+.chat-bubble.ai h3 {
   font-size: 1.1em;
   margin: 10px 0 5px;
   color: var(--primary);
 }
 
-.chat-bubble.ai ul, .chat-bubble.ai ol {
+.chat-bubble.ai ul,
+.chat-bubble.ai ol {
   padding-left: 20px;
   margin-bottom: 8px;
 }
@@ -338,9 +349,17 @@ main {
 }
 
 @keyframes pulseMic {
-  0% { box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(248, 81, 73, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(248, 81, 73, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(248, 81, 73, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(248, 81, 73, 0);
+  }
 }
 
 .send-btn {
@@ -386,7 +405,8 @@ main {
     gap: 8px;
   }
 
-  .chat-toggle-btn, .logout-btn {
+  .chat-toggle-btn,
+  .logout-btn {
     padding: 6px 10px;
     font-size: 11px;
   }
@@ -397,15 +417,18 @@ main {
     overflow: visible;
     padding: 12px;
     gap: 16px;
-    margin-top: 60px; /* Offset for sticky header */
+    margin-top: 60px;
+    /* Offset for sticky header */
   }
 
   .chat-active main {
-    display: flex; /* Stack vertically on mobile */
+    display: flex;
+    /* Stack vertically on mobile */
     flex-direction: column;
   }
 
-  .left, .right {
+  .left,
+  .right {
     min-height: 450px;
     height: auto;
     flex: none;
@@ -431,7 +454,7 @@ main {
     padding: 16px;
     padding-bottom: 80px;
   }
-  
+
   .right .review {
     padding: 16px;
   }
@@ -444,9 +467,10 @@ main {
 /* 4. VERY SMALL PHONES (Max 480px) */
 @media (max-width: 480px) {
   header h1 {
-    display: none; /* Hide logo text to save space, keep ✨ emoji icon or similar */
+    display: none;
+    /* Hide logo text to save space, keep ✨ emoji icon or similar */
   }
-  
+
   header .logo::after {
     content: "✨ DM";
     font-size: 20px;
@@ -488,8 +512,15 @@ main {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .auth-header {

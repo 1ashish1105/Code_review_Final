@@ -96,7 +96,7 @@ function ChatPanel({ currentCode }) {
           // Start listening
           if (!isListeningRef.current && recognitionRef.current) {
             setIsListening(true);
-            try { recognitionRef.current.start(); } catch (e) {}
+            try { recognitionRef.current.start(); } catch (e) { }
           }
         } else {
           vadRef.current = requestAnimationFrame(checkVolume);
@@ -115,7 +115,7 @@ function ChatPanel({ currentCode }) {
       vadRef.current = null;
     }
     if (audioCtxRef.current) {
-      audioCtxRef.current.close().catch(() => {});
+      audioCtxRef.current.close().catch(() => { });
       audioCtxRef.current = null;
     }
     if (streamRef.current) {
@@ -187,7 +187,7 @@ function ChatPanel({ currentCode }) {
 
       const contextMessage = `Context: The user is looking at this code:\n\n${currentCode}\n\nQuestion: ${textToSend}`;
 
-      const response = await axios.post('http://localhost:3001/ai/chat', {
+      const response = await axios.post('https://code-review-final.onrender.com/ai/chat', {
         history: history,
         message: contextMessage
       });
@@ -223,7 +223,7 @@ function ChatPanel({ currentCode }) {
       setIsAISpeaking(false);
       stopBargeInDetection();
       setIsListening(true);
-      try { rec.start(); } catch (e) {}
+      try { rec.start(); } catch (e) { }
     }
   };
 

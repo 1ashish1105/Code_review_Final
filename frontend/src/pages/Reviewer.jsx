@@ -20,7 +20,7 @@ function Reviewer() {
   async function reviewCode() {
     setLoading(true)
     try {
-      const response = await axios.post('http://localhost:3001/ai/get-review', { code })
+      const response = await axios.post('https://code-review-final.onrender.com/ai/get-review', { code })
       setReview(response.data)
     } catch (error) {
       console.error("Error fetching review:", error)
@@ -43,8 +43,8 @@ function Reviewer() {
         </div>
         <div className="header-actions">
           <button onClick={logout} className="logout-btn">Logout</button>
-          <button 
-            onClick={() => setIsChatOpen(!isChatOpen)} 
+          <button
+            onClick={() => setIsChatOpen(!isChatOpen)}
             className={`chat-toggle-btn ${isChatOpen ? 'active' : ''}`}
           >
             {isChatOpen ? 'Close Chat' : 'Ask AI Bot 🤖'}
@@ -78,7 +78,7 @@ function Reviewer() {
             )}
           </div>
         </div>
-        
+
         {isChatOpen && (
           <div className="chat-section">
             <ChatPanel currentCode={code} />
