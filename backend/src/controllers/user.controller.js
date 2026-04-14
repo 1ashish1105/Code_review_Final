@@ -1,11 +1,16 @@
 import User from '../model/user.model.js';
 import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 
 // --- REGISTER USER ---
 export const registerUser = async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({ message: "Database is not ready. Please check your connection or wait a moment." });
+        }
+
         if (!username || !email || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
@@ -32,7 +37,11 @@ export const registerUser = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error("REGISTER ERROR:", error);
+        res.status(500).json({ 
+            message: "Registration failed: " + error.message, 
+            error: error.message 
+        });
     }
 };
 
@@ -41,6 +50,10 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({ message: "Database is not ready. Please check your connection." });
+        }
+
         if (!email || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
@@ -61,6 +74,10 @@ export const loginUser = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error("LOGIN ERROR:", error);
+        res.status(500).json({ 
+            message: "Login failed: " + error.message, 
+            error: error.message 
+        });
     }
 };

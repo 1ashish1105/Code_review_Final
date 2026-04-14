@@ -25,7 +25,7 @@ function Reviewer() {
     } catch (error) {
       console.error("Error fetching review:", error)
       const errorMsg = error.response?.data || error.message || "Unknown Error";
-      setReview(`### ❌ Connection Error\n${errorMsg}\n\n*Make sure your backend server is running on port 3001.*`)
+      setReview(`### ❌ Connection Error\n${errorMsg}\n\n*Make sure your backend server is reachable at this URL.*`)
     }
     setLoading(false)
   }
