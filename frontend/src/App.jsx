@@ -1,71 +1,41 @@
-import { useState, useEffect } from 'react'
-import "prismjs/themes/prism-tomorrow.css"
-import prism from "prismjs"
-import axios from 'axios'
-import Markdown from 'react-markdown'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Reviewer from './pages/Reviewer';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import './App.css';
+
+// Protected Route Component to restrict access to the reviewer
+const ProtectedRoute = ({ children }) => {
+  const user = localStorage.getItem('user');
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
 
 function App() {
-  const [code, setCode] = useState(`function sum() {
-  return a + b
-}`)
-  const [review, setReview] = useState(null)
-  const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    prism.highlightAll()
-  }, [])
-
-  async function reviewCode() {
-    setLoading(true)
-    try {
-      const response = await axios.post('https://code-review-system-klou.onrender.com/ai/get-review', { code })
-      setReview(response.data)
-    } catch (error) {
-      console.error("Error fetching review:", error)
-      const errorMsg = error.response?.data || error.message || "Unknown Error";
-      setReview(`### ❌ Connection Error\n${errorMsg}\n\n*Check your backend terminal for more details.*`)
-    }
-    setLoading(false)
-  }
-
   return (
-    <>
-      <header>
-        <div className="logo">
-          <h1>✨ Smart Reviewer</h1>
-        </div>
-      </header>
-      <main>
-        <div className="left">
-          <div className="code">
-            <textarea
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="Paste your code here..."
-            />
-          </div>
-          <button
-            onClick={reviewCode}
-            disabled={loading}
-            className="review-btn"
-          >
-            {loading ? "Reviewing..." : "Review Code"}
-          </button>
-        </div>
-        <div className="right">
-          <div className="review">
-            {review ? <Markdown>{review}</Markdown> : (
-              <div className="empty-state">
-                <h2>Ready for review!</h2>
-                <p>Paste some code on the left and click the button to get AI feedback.</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
-    </>
-  )
+    <Router>
+      <Routes>
+        {/* Protected Home Route */}
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute>
+              <Reviewer />
+            </ProtectedRoute>
+          } 
+        />
+        
+        {/* Auth Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        
+        {/* Catch-all Redirect */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
