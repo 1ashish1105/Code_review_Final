@@ -4,6 +4,7 @@ header {
   padding: 0 24px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background: rgba(22, 27, 34, 0.8);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
@@ -146,23 +147,248 @@ main {
   margin-bottom: 12px;
 }
 
-/* TABLET LAYOUT */
-@media (max-width: 1024px) {
-  main {
-    padding: 15px;
-    gap: 15px;
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.chat-toggle-btn {
+  background: rgba(88, 166, 255, 0.1);
+  border: 1px solid rgba(88, 166, 255, 0.4);
+  color: #58a6ff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chat-toggle-btn:hover, .chat-toggle-btn.active {
+  background: #58a6ff;
+  color: white;
+  box-shadow: 0 0 15px rgba(88, 166, 255, 0.3);
+}
+
+/* CHAT LAYOUT */
+.chat-active main {
+  display: grid;
+  grid-template-columns: 1fr 1fr 380px;
+}
+
+.chat-section {
+  height: 100%;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.chat-panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+.chat-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.chat-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-welcome {
+  text-align: center;
+  color: #8b949e;
+  font-size: 13px;
+  margin-top: 40px;
+  line-height: 1.6;
+}
+
+.chat-bubble {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: var(--primary);
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+
+.chat-bubble.ai {
+  align-self: flex-start;
+  background: #21262d;
+  color: #c9d1d9;
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 2px;
+}
+
+/* Chat Markdown Content Styles */
+.chat-bubble.ai p {
+  margin-bottom: 8px;
+}
+
+.chat-bubble.ai p:last-child {
+  margin-bottom: 0;
+}
+
+.chat-bubble.ai pre {
+  background: #0d1117 !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--border) !important;
+  margin: 10px 0 !important;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.chat-bubble.ai code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.chat-bubble.ai h1, .chat-bubble.ai h2, .chat-bubble.ai h3 {
+  font-size: 1.1em;
+  margin: 10px 0 5px;
+  color: var(--primary);
+}
+
+.chat-bubble.ai ul, .chat-bubble.ai ol {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.chat-bubble.loading {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.chat-input-area {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: rgba(13, 17, 23, 0.4);
+}
+
+.chat-input-area input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: #8b949e;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.icon-btn.active {
+  color: var(--primary);
+}
+
+.mic-btn.listening {
+  color: #f85149;
+  background: rgba(248, 81, 73, 0.1);
+  animation: pulseMic 1.5s infinite;
+}
+
+@keyframes pulseMic {
+  0% { box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(248, 81, 73, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(248, 81, 73, 0); }
+}
+
+.send-btn {
+  color: var(--primary);
+}
+
+/* --- RESPONSIVE DESIGN (Phones, Tabs, Laptops) --- */
+
+/* 1. LARGE DESKTOP / LAPTOP (Default) */
+.chat-active main {
+  display: grid;
+  grid-template-columns: 1fr 1fr 380px;
+  gap: 20px;
+}
+
+/* 2. TABLETS & SMALL LAPTOPS (Max 1200px) */
+@media (max-width: 1200px) {
+  .chat-active main {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 400px;
+    overflow-y: auto;
+  }
+
+  .chat-section {
+    grid-column: span 2;
+    height: 450px;
+    margin-top: 20px;
   }
 }
 
-/* MOBILE LAYOUT */
+/* 3. MOBILE PHONES (Max 768px) */
 @media (max-width: 768px) {
   header {
     height: 60px;
-    justify-content: center;
+    padding: 0 16px;
   }
 
   header h1 {
     font-size: 18px;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .chat-toggle-btn, .logout-btn {
+    padding: 6px 10px;
+    font-size: 11px;
   }
 
   main {
@@ -170,34 +396,67 @@ main {
     height: auto;
     overflow: visible;
     padding: 12px;
-    gap: 12px;
+    gap: 16px;
+    margin-top: 60px; /* Offset for sticky header */
   }
 
-  .left,
-  .right {
-    min-height: 400px;
-    height: 50vh;
+  .chat-active main {
+    display: flex; /* Stack vertically on mobile */
+    flex-direction: column;
+  }
+
+  .left, .right {
+    min-height: 450px;
+    height: auto;
+    flex: none;
+  }
+
+  .chat-section {
+    height: 500px;
+    flex: none;
+    margin-top: 0;
   }
 
   .review-btn {
-    width: calc(100% - 40px);
-    left: 20px;
-    bottom: 20px;
+    width: calc(100% - 32px);
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
     text-align: center;
   }
 
+  /* Make code text slightly smaller for phone screens */
   .left .code textarea {
+    font-size: 13px;
+    padding: 16px;
     padding-bottom: 80px;
-    /* Space for the button */
+  }
+  
+  .right .review {
+    padding: 16px;
+  }
+
+  .chat-panel {
+    border-radius: 12px;
   }
 }
 
-/* Responsive fixes for Prism code blocks */
-.review pre code {
-  background: transparent;
-  padding: 0;
-  color: inherit;
-  display: block;
+/* 4. VERY SMALL PHONES (Max 480px) */
+@media (max-width: 480px) {
+  header h1 {
+    display: none; /* Hide logo text to save space, keep ✨ emoji icon or similar */
+  }
+  
+  header .logo::after {
+    content: "✨ DM";
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary);
+  }
+
+  .auth-card {
+    padding: 24px;
+  }
 }
 
 /* --- AUTHENTICATION STYLES --- */

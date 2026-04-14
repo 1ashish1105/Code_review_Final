@@ -1,16 +1,18 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config();
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-async function list() {
-  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_KEY);
+const key = process.env.MY_APP_GEMINI_KEY;
+const genAI = new GoogleGenerativeAI(key);
+
+async function run() {
   try {
-    // We try to list models to see what this key supports
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GOOGLE_GEMINI_KEY}`);
-    const data = await response.json();
-    console.log(JSON.stringify(data, null, 2));
+    const list = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+    const data = await list.json();
+    console.log("Available Models:", JSON.stringify(data, null, 2));
   } catch (err) {
-    console.error(err);
+    console.error("FAILED!", err.message);
   }
 }
 
-list();
+run();

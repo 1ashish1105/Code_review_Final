@@ -3,6 +3,7 @@ import "prismjs/themes/prism-tomorrow.css"
 import prism from "prismjs"
 import axios from 'axios'
 import Markdown from 'react-markdown'
+import ChatPanel from '../components/ChatPanel'
 
 function Reviewer() {
   const [code, setCode] = useState(`function sum() {
@@ -10,6 +11,7 @@ function Reviewer() {
 }`)
   const [review, setReview] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [isChatOpen, setIsChatOpen] = useState(false)
 
   useEffect(() => {
     prism.highlightAll()
@@ -34,12 +36,20 @@ function Reviewer() {
   }
 
   return (
-    <>
+    <div className={`app-container ${isChatOpen ? 'chat-active' : ''}`}>
       <header>
         <div className="logo">
-          <h1>✨ Smart Reviewer</h1>
+          <h1>✨ DevMind</h1>
         </div>
-        <button onClick={logout} className="logout-btn">Logout</button>
+        <div className="header-actions">
+          <button onClick={logout} className="logout-btn">Logout</button>
+          <button 
+            onClick={() => setIsChatOpen(!isChatOpen)} 
+            className={`chat-toggle-btn ${isChatOpen ? 'active' : ''}`}
+          >
+            {isChatOpen ? 'Close Chat' : 'Ask AI Bot 🤖'}
+          </button>
+        </div>
       </header>
       <main>
         <div className="left">
@@ -68,8 +78,14 @@ function Reviewer() {
             )}
           </div>
         </div>
+        
+        {isChatOpen && (
+          <div className="chat-section">
+            <ChatPanel currentCode={code} />
+          </div>
+        )}
       </main>
-    </>
+    </div>
   )
 }
 
