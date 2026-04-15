@@ -12,7 +12,7 @@ function ChatPanel({ currentCode }) {
   const [isListening, setIsListening] = useState(false);
   const [isSpeakingEnabled, setIsSpeakingEnabled] = useState(true);
   const [isAISpeaking, setIsAISpeaking] = useState(false);
-  const [lang, setLang] = useState('hi-IN'); // Default: Hindi/Hinglish
+  const [lang, setLang] = useState('en-US'); // Default: English
 
   const chatEndRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -136,22 +136,29 @@ function ChatPanel({ currentCode }) {
   // TEXT-TO-SPEECH with barge-in support
   // ──────────────────────────────────────────────
   const speak = (text) => {
-    if (!isSpeakingEnabled) return;
+    if (!isSpeakingEnabled || !text) return;
 
     // Clean markdown before speaking
-    const cleanText = text.replace(/[#*`_~]/g, "").replace(/\[.*?\]\(.*?\)/g, "");
+    const cleanText = text.replace(/[#*`_~]/g, "").replace(/\[.*?\]\(.*?\)/g, "").trim();
+    if (!cleanText) return;
 
+    // Stop anything currently playing
     window.speechSynthesis.cancel();
+
     const utterance = new SpeechSynthesisUtterance(cleanText);
     utterance.rate = 1;
     utterance.pitch = 1;
 
-    // Set language for speaking too
-    utterance.lang = lang === 'hi-IN' ? 'hi-IN' : 'en-US';
+    // Select an English voice if available, otherwise use default
+    const voices = window.speechSynthesis.getVoices();
+    const englishVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+    if (englishVoice) utterance.voice = englishVoice;
+
+    utterance.lang = lang;
 
     utterance.onstart = () => {
       setIsAISpeaking(true);
-      startBargeInDetection(); // Start monitoring for barge-in
+      startBargeInDetection(); 
     };
 
     utterance.onend = () => {
@@ -159,7 +166,8 @@ function ChatPanel({ currentCode }) {
       stopBargeInDetection();
     };
 
-    utterance.onerror = () => {
+    utterance.onerror = (event) => {
+      console.error("SpeechSynthesisUtterance error", event);
       setIsAISpeaking(false);
       stopBargeInDetection();
     };
@@ -259,9 +267,7 @@ function ChatPanel({ currentCode }) {
         {messages.length === 0 && (
           <div className="chat-welcome">
             <p>
-              {lang === 'hi-IN'
-                ? 'Apna code ka sawaal puchein! Mic dabayein aur Hindi ya Hinglish mein bolein. 🎙️'
-                : 'Ask me anything about your code! Click the mic to talk. 🎙️'}
+              Ask me anything about your code! Click the mic to talk. 🎙️
             </p>
           </div>
         )}
@@ -293,7 +299,7 @@ function ChatPanel({ currentCode }) {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={lang === 'hi-IN' ? 'Hindi ya Hinglish mein likhein...' : 'Type or speak a question...'}
+          placeholder="Type or speak a question..."
           onKeyPress={(e) => e.key === 'Enter' && handleSend()}
         />
         <button onClick={() => handleSend()} className="send-btn">

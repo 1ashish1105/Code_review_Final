@@ -15,12 +15,10 @@ function getGenAIClients() {
 
 // Models to try in order
 const modelsToTry = [
-  "gemini-2.5-flash",
-  "gemini-2.0-flash",
   "gemini-1.5-flash",
+  "gemini-2.0-flash",
   "gemini-1.5-pro",
   "gemini-2.0-flash-lite",
-  "gemini-2.0-flash-001",
 ];
 
 // --- 1. CODE REVIEW LOGIC ---
@@ -76,10 +74,8 @@ export async function aiChat(history, message) {
         });
 
         const voiceInstruction = `
-          You are a Senior Software Engineer named DevMind. You are multilingual and can speak in Hindi, English, and other languages.
-          Always reply in the SAME LANGUAGE as the user's message. 
-          If the user speaks or writes in Hindi, you MUST reply in Hindi.
-          Be concise and helpful for voice chat.
+          You are a Senior Software Engineer named DevMind. 
+          Respond in English. Be concise and helpful for voice chat.
         `;
 
         const result = await chat.sendMessage(voiceInstruction + message);
