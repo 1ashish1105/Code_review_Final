@@ -81,7 +81,7 @@ function ChatPanel({ currentCode }) {
       source.connect(analyser);
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-      const VOLUME_THRESHOLD = 18; // Sensitivity — lower = more sensitive
+      const VOLUME_THRESHOLD = 35; // Sensitivity — higher = less likely to self-interrupt
 
       const checkVolume = () => {
         if (!audioCtxRef.current) return;
@@ -135,6 +135,9 @@ function ChatPanel({ currentCode }) {
   // ──────────────────────────────────────────────
   // TEXT-TO-SPEECH with barge-in support
   // ──────────────────────────────────────────────
+  // Keep a global reference to the utterance to prevent garbage collection (Chrome bug)
+  const utteranceRef = useRef(null);
+
   const speak = (text) => {
     if (!isSpeakingEnabled || !text) return;
 
@@ -142,34 +145,36 @@ function ChatPanel({ currentCode }) {
     const cleanText = text.replace(/[#*`_~]/g, "").replace(/\[.*?\]\(.*?\)/g, "").trim();
     if (!cleanText) return;
 
-    // Stop anything currently playing
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
+    utteranceRef.current = utterance; // Keep reference
+    
     utterance.rate = 1;
     utterance.pitch = 1;
+    utterance.lang = lang;
 
-    // Select an English voice if available, otherwise use default
     const voices = window.speechSynthesis.getVoices();
     const englishVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
     if (englishVoice) utterance.voice = englishVoice;
 
-    utterance.lang = lang;
-
     utterance.onstart = () => {
       setIsAISpeaking(true);
-      startBargeInDetection(); 
+      // Start barge-in but with a slight delay to avoid bot hearing its own start
+      setTimeout(() => startBargeInDetection(), 500); 
     };
 
     utterance.onend = () => {
       setIsAISpeaking(false);
       stopBargeInDetection();
+      utteranceRef.current = null;
     };
 
     utterance.onerror = (event) => {
-      console.error("SpeechSynthesisUtterance error", event);
+      console.error("Speech error:", event);
       setIsAISpeaking(false);
       stopBargeInDetection();
+      utteranceRef.current = null;
     };
 
     window.speechSynthesis.speak(utterance);
